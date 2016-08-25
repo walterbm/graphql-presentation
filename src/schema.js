@@ -1,4 +1,7 @@
+const _ = require('lodash');
+
 import { EngineersList } from './data/engineers';
+import { ProjectsList } from './data/projects';
 
 import {
   // basic GraphQL types
@@ -18,11 +21,28 @@ import {
 
 const Engineer = new GraphQLObjectType({
   name: 'Engineer',
-  description: 'This represent a Fuzz engineer',
+  description: 'This represents a Fuzz engineer',
   fields: () => ({
     id: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: GraphQLString},
-    team: {type: GraphQLString}
+    team: {type: GraphQLString},
+    projects: {
+      type: new GraphQLList(Project),
+      resolve: ({id}) => _.filter(ProjectsList, p => _.includes(p.engineers,id))
+    }
+  })
+});
+
+const Project = new GraphQLObjectType({
+  name: 'Project',
+  description: 'This represents a Fuzz project',
+  fields: () => ({
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    title: {type: GraphQLString},
+    engineers: {
+      type: new GraphQLList(Engineer),
+      resolve: ({engineers}) =>  _.filter(EngineersList, e => _.includes(engineers, e.id))
+    }
   })
 });
 
@@ -33,20 +53,21 @@ const Query = new GraphQLObjectType({
   fields: () => ({
     engineers: {
       type: new GraphQLList(Engineer),
-      resolve: () => {
-        return EngineersList;
-      }
+      description: 'List of Fuzz engineers',
+      resolve: () => EngineersList
+    },
+    projects: {
+      type: new GraphQLList(Project),
+      description: 'List of Fuzz project',
+      resolve: () => ProjectsList
     },
     echo: {
       type: GraphQLString,
       description: 'Echo what you enter',
-      description: 'List of Fuzz engineers',
       args: {
         message: {type: GraphQLString}
       },
-      resolve: (source, {message}) => {
-        return `received ${message}`;
-      }
+      resolve: (source, {message}) => `received ${message}`
     }
   })
 });
