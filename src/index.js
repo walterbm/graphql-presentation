@@ -1,5 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import GraphIDE from './GraphIDE';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<GraphIDE />, document.getElementById('root'));
