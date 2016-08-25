@@ -1,26 +1,26 @@
 export const ProjectsList = [
   {
-    id: `cid-${Math.ceil(Math.random() * 99999)}`,
+    id: "fuzz-v2v",
     title: 'Viewers to Volunteers',
     engineers: ['vaghi', 'lea','kirill']
   },
   {
-    id: `cid-${Math.ceil(Math.random() * 99999)}`,
+    id: "fuzz-ymvp",
     title: 'Y-MVP',
     engineers: ['simon','kyle']
   },
   {
-    id: `cid-${Math.ceil(Math.random() * 99999)}`,
+    id: "fuzz-mortar",
     title: 'Mortar',
     engineers: ['kyle','walter','lea']
   },
   {
-    id: `cid-${Math.ceil(Math.random() * 99999)}`,
+    id: "fuzz-belk",
     title: 'Belk',
     engineers: ['jham']
   },
   {
-    id: `cid-${Math.ceil(Math.random() * 99999)}`,
+    id: "fuzz-nyp",
     title: 'New York Post',
     engineers: ['jham','vaghi']
   },
