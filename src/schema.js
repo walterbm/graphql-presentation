@@ -14,6 +14,7 @@ import {
 
   // Used to create required fields and arguments
   GraphQLNonNull,
+  GraphQLInputObjectType,
 
   // Class that creates the Schema
   GraphQLSchema
@@ -58,7 +59,7 @@ const Query = new GraphQLObjectType({
     },
     projects: {
       type: new GraphQLList(Project),
-      description: 'List of Fuzz project',
+      description: 'List of Fuzz projects',
       resolve: () => ProjectsList
     },
     echo: {
@@ -73,8 +74,66 @@ const Query = new GraphQLObjectType({
 });
 
 /** Schema **/
+const Mutation = new GraphQLObjectType({
+  name: "FuzzMutations",
+  fields: {
+    createProject: {
+      type: Project,
+      description: "Create a new project",
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        title: {type: new GraphQLNonNull(GraphQLString)},
+        engineers: {type: new GraphQLList(GraphQLString)}
+      },
+      resolve: (source, {...project}) => {
+        if(_.find(ProjectsList, p => p.title == project.title)) {
+          throw new Error("Project already exists: " + project.title);
+        }
+        ProjectsList.push(project);
+        return project;
+      }
+    },
+    createEngineer: {
+      type: Engineer,
+      description: "Add a new engineer",
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLString)},
+        name: {type: new GraphQLNonNull(GraphQLString)},
+        team: {type: new GraphQLNonNull(GraphQLString)}
+      },
+      resolve: (source, {...engineer}) => {
+        if(_.find(EngineersList, e => e.id == engineer.id)) {
+          throw new Error("Engineer already exists: " + engineer.id);
+        }
+        ProjectsList.push(engineer);
+        return engineer;
+      }
+    },
+    updateResourcing: {
+      type: Project,
+      description: "Update resourcing on a specific project",
+      args: {
+        projectId: {type: new GraphQLNonNull(GraphQLString)},
+        add: {type: new GraphQLList(GraphQLString)},
+        remove: {type: new GraphQLList(GraphQLString)}
+      },
+      resolve: (source, {...resourcing}) => {
+        let index = _.findIndex(ProjectsList, p => p.id == resourcing.projectId);
+        if(index != -1) {
+          ProjectsList[index].engineers = _.union(_.difference(ProjectsList[index].engineers, resourcing.remove), resourcing.add)
+        } else {
+          throw new Error(`A Project with ID # ${resourcing.projectId} does not exists!`);
+        }
+        return ProjectsList[index];
+      }
+    }
+  }
+});
+
+/** Schema **/
 const Schema = new GraphQLSchema({
-  query: Query
+  query: Query,
+  mutation: Mutation
 });
 
 export default Schema;
