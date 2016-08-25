@@ -16,5 +16,17 @@ module.exports = {
       loaders: ['babel'],
       include: path.join(__dirname, 'src')
     }]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    }),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false }
+    }),
+    new webpack.optimize.AggressiveMergingPlugin()
+  ]
 };

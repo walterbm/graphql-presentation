@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "small graphql demo for a presentation",
   "scripts": {
-    "start": "webpack"
+    "start": "webpack --progress"
   },
   "author": "Walter Beller-Morales",
   "license": "MIT",
