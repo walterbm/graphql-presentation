@@ -1,42 +1,57 @@
-// import PostsList from './data/posts';
-// import AuthorsList from './data/authors';
-// import {CommentList, ReplyList} from './data/comments';
+import { EngineersList } from './data/engineers';
 
 import {
-  // These are the basic GraphQL types
-  // GraphQLInt,
-  // GraphQLFloat,
+  // basic GraphQL types
+  GraphQLInt,
+  GraphQLFloat,
   GraphQLString,
-  // GraphQLList,
+  GraphQLList,
   GraphQLObjectType,
-  // GraphQLEnumType,
+  GraphQLEnumType,
 
-  // This is used to create required fields and arguments
-  // GraphQLNonNull,
+  // Used to create required fields and arguments
+  GraphQLNonNull,
 
-  // This is the class we need to create the schema
+  // Class that creates the Schema
   GraphQLSchema
 } from 'graphql';
 
-// This is the Root Query
+const Engineer = new GraphQLObjectType({
+  name: 'Engineer',
+  description: 'This represent a Fuzz engineer',
+  fields: () => ({
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    name: {type: GraphQLString},
+    team: {type: GraphQLString}
+  })
+});
+
+/** Root Query **/
 const Query = new GraphQLObjectType({
   name: 'FuzzQL',
   description: 'Root of the GraphQL Schema',
   fields: () => ({
+    engineers: {
+      type: new GraphQLList(Engineer),
+      resolve: () => {
+        return EngineersList;
+      }
+    },
     echo: {
       type: GraphQLString,
       description: 'Echo what you enter',
+      description: 'List of Fuzz engineers',
       args: {
         message: {type: GraphQLString}
       },
-      resolve: function(source, {message}) {
+      resolve: (source, {message}) => {
         return `received ${message}`;
       }
     }
   })
 });
 
-// The Schema
+/** Schema **/
 const Schema = new GraphQLSchema({
   query: Query
 });
