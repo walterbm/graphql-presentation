@@ -3,11 +3,11 @@ import GraphiQL from 'graphiql';
 import Schema from './schema.js';
 import 'isomorphic-fetch';
 
-window.a = require('graphql');
+window.ide = require('graphql');
 
-export default class App extends Component {
+export default class GraphIDE extends Component {
   fetchData({query, variables}) {
-    return window.a.graphql(Schema, query, null, JSON.parse(variables || '{}'));
+    return window.ide.graphql(Schema, query, null, JSON.parse(variables || '{}'));
   }
 
   render() {
